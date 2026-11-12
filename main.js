@@ -1,16 +1,17 @@
 (async () => {
-  // Create a new application
+  // This creates all the visuals that are from pixi.
   const app = new PIXI.Application();
 
-  // Initialize the application
+  // Does so it gets as big as the website window, the visuals from pixi.
   await app.init({ resizeTo: window });
 
-  // Append the application canvas to the document body
+  // Shows the visuals on the website.
   document.body.appendChild(app.canvas);
 
-  // Load the star texture
+  // Shows the star from pixi wich also are all the stars.
   const starTexture = await PIXI.Assets.load('https://pixijs.com/assets/star.png');
 
+  // this is the settings for how the star is actually shown on the website, like speed and how many they are for example.
   const starAmount = 1000;
   let cameraZ = 0;
   const fov = 20;
@@ -20,9 +21,10 @@
   const starStretch = 5;
   const starBaseSize = 0.05;
 
-  // Create the stars
+  // Saves the stars.
   const stars = [];
 
+  // A loop for the stars that creates them an positioning.
   for (let i = 0; i < starAmount; i++) {
     const star = {
       sprite: new PIXI.Sprite(starTexture),
@@ -31,6 +33,7 @@
       y: 0,
     };
 
+    // Where the middle is, creates the random position and makes it show.
     star.sprite.anchor.x = 0.5;
     star.sprite.anchor.y = 0.7;
     randomizeStar(star, true);
@@ -38,12 +41,13 @@
     stars.push(star);
   }
 
+ // Makes it look different by randomizing the stars so it creates the vibe of floating away.
   function randomizeStar(star, initial) {
     star.z = initial
       ? Math.random() * 2000
       : cameraZ + Math.random() * 1000 + 2000;
 
-    // Calculate star positions with radial random coordinate so no star hits the camera.
+  
     const deg = Math.random() * Math.PI * 2;
     const distance = Math.random() * 50 + 1;
 
@@ -51,11 +55,11 @@
     star.y = Math.sin(deg) * distance;
   }
 
-  // Hold the mouse button down for warp speed
+  // Makes it so you can hold the mouse button for the input of the stars going in a faster speed.
   window.addEventListener('pointerdown', () => { warpSpeed = 1; });
   window.addEventListener('pointerup', () => { warpSpeed = 0; });
 
-  // Hold the space bar down for warp speed
+  // The same with the spacebar.
   window.addEventListener('keydown', (e) => {
     if (e.code === 'Space') { e.preventDefault(); warpSpeed = 1; }
   });
@@ -63,19 +67,26 @@
     if (e.code === 'Space') { warpSpeed = 0; }
   });
 
-  // Listen for animate update
+  // Makes the speed of the stars switch smoothly, speed up and speed down.
   app.ticker.add((time) => {
-    // Simple easing. This should be changed to proper easing function when used for real.
+    
     speed += (warpSpeed - speed) / 20;
+
+    // Makes the stars go forward.
     cameraZ += time.deltaTime * 10 * (speed + baseSpeed);
+
+    // Updates each star.
     for (let i = 0; i < starAmount; i++) {
       const star = stars[i];
 
+    // Updates so if it goes by it and gets back to the start where it comes again.
       if (star.z < cameraZ) randomizeStar(star);
 
-      // Map star 3d position to 2d with really simple projection
+      // Where the star is at the moment.
       const z = star.z - cameraZ;
+    
 
+      // Positons the star depending on where they are.
       star.sprite.x =
         star.x * (fov / z) * app.renderer.screen.width +
         app.renderer.screen.width / 2;
@@ -83,22 +94,27 @@
         star.y * (fov / z) * app.renderer.screen.width +
         app.renderer.screen.height / 2;
 
-      // Calculate star scale & rotation.
+      // How far away the stars are from the center.
       const dxCenter = star.sprite.x - app.renderer.screen.width / 2;
       const dyCenter = star.sprite.y - app.renderer.screen.height / 2;
       const distanceCenter = Math.sqrt(
         dxCenter * dxCenter + dyCenter * dyCenter,
       );
+
+      // Size of stars if they are close.
       const distanceScale = Math.max(0, (2000 - z) / 2000);
 
+
+      //Wideness of the star.
       star.sprite.scale.x = distanceScale * starBaseSize;
-      // Star is looking towards center so that y axis is towards center.
-      // Scale the star depending on how fast we are moving, what the stretchfactor is
-      // and depending on how far away it is from the center.
+
+      // Does so the stars stretches and becomes a stroke when the speed changes.
       star.sprite.scale.y =
         distanceScale * starBaseSize +
         (distanceScale * speed * starStretch * distanceCenter) /
           app.renderer.screen.width;
+
+      //Positon of the "stroke" the stars become.
       star.sprite.rotation = Math.atan2(dyCenter, dxCenter) + Math.PI / 2;
     }
   });

@@ -1,10 +1,14 @@
+
+
 body {
+
+  /* Font and color*/
   margin: 0;
   font-family: sans-serif;
   color: aqua;
 }
 
-/* The Pixi canvas sits behind the text */
+/* The visuals is under the text and makes it stay in one place. */
 canvas {
   position: fixed;
   top: 0;
@@ -12,6 +16,7 @@ canvas {
   z-index: -1;
 }
 
+/* Does so the text is in a fixed width and space */
 main {
   max-width: 40rem;
   padding: 2rem;
