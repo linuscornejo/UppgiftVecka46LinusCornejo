@@ -1,6 +1,8 @@
+import { Application, Assets, Sprite } from 'pixi.js';
+
 (async () => {
   // Create a new application
-  const app = new PIXI.Application();
+  const app = new Application();
 
   // Initialize the application
   await app.init({ resizeTo: window });
@@ -9,7 +11,7 @@
   document.body.appendChild(app.canvas);
 
   // Load the star texture
-  const starTexture = await PIXI.Assets.load('https://pixijs.com/assets/star.png');
+  const starTexture = await Assets.load('https://pixijs.com/assets/star.png');
 
   const starAmount = 1000;
   let cameraZ = 0;
@@ -25,7 +27,7 @@
 
   for (let i = 0; i < starAmount; i++) {
     const star = {
-      sprite: new PIXI.Sprite(starTexture),
+      sprite: new Sprite(starTexture),
       z: 0,
       x: 0,
       y: 0,
@@ -51,17 +53,10 @@
     star.y = Math.sin(deg) * distance;
   }
 
-    // Håll inne musknappen för warp-fart
-  window.addEventListener('pointerdown', () => { warpSpeed = 1; });
-  window.addEventListener('pointerup', () => { warpSpeed = 0; });
-
-  // Håll inne mellanslag för warp-fart
-  window.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') { e.preventDefault(); warpSpeed = 1; }
-  });
-  window.addEventListener('keyup', (e) => {
-    if (e.code === 'Space') { warpSpeed = 0; }
-  });
+  // Change flight speed every 5 seconds
+  setInterval(() => {
+    warpSpeed = warpSpeed > 0 ? 0 : 1;
+  }, 5000);
 
   // Listen for animate update
   app.ticker.add((time) => {
