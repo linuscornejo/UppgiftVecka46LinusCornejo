@@ -1,6 +1,6 @@
 (async () => {
   // Create a new application
-  const app = new PIXI Application();
+  const app = new PIXI.Application();
 
   // Initialize the application
   await app.init({ resizeTo: window });
