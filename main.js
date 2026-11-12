@@ -1,3 +1,5 @@
+//Based of an example from PIXI.
+
 (async () => {
   // This creates all the visuals that are from pixi.
   const app = new PIXI.Application();
@@ -8,23 +10,23 @@
   // Shows the visuals on the website.
   document.body.appendChild(app.canvas);
 
-  // Shows the star from pixi wich also are all the stars.
+  // Shows the star from pixi which also are all the stars.
   const starTexture = await PIXI.Assets.load('https://pixijs.com/assets/star.png');
 
   // this is the settings for how the star is actually shown on the website, like speed and how many they are for example.
-  const starAmount = 1000;
+  const starAmount = 1800;
   let cameraZ = 0;
-  const fov = 20;
-  const baseSpeed = 0.025;
-  let speed = 0;
+  const fov = 25;
+  const baseSpeed = 0.020;
+  let speed = 1;
   let warpSpeed = 0;
-  const starStretch = 5;
+  const starStretch = 8;
   const starBaseSize = 0.05;
 
   // Saves the stars.
   const stars = [];
 
-  // A loop for the stars that creates them an positioning.
+  // A loop for the stars that creates them and positioning.
   for (let i = 0; i < starAmount; i++) {
     const star = {
       sprite: new PIXI.Sprite(starTexture),
@@ -70,7 +72,7 @@
   // Makes the speed of the stars switch smoothly, speed up and speed down.
   app.ticker.add((time) => {
     
-    speed += (warpSpeed - speed) / 20;
+    speed += (warpSpeed - speed) / 30;
 
     // Makes the stars go forward.
     cameraZ += time.deltaTime * 10 * (speed + baseSpeed);
@@ -86,7 +88,7 @@
       const z = star.z - cameraZ;
     
 
-      // Positons the star depending on where they are.
+      // Positions the star depending on where they are.
       star.sprite.x =
         star.x * (fov / z) * app.renderer.screen.width +
         app.renderer.screen.width / 2;
@@ -108,13 +110,13 @@
       //Wideness of the star.
       star.sprite.scale.x = distanceScale * starBaseSize;
 
-      // Does so the stars stretches and becomes a stroke when the speed changes.
+      // Does so the stars stretches and become lines when the speed changes.
       star.sprite.scale.y =
         distanceScale * starBaseSize +
         (distanceScale * speed * starStretch * distanceCenter) /
           app.renderer.screen.width;
 
-      //Positon of the "stroke" the stars become.
+      //Position of the "lines" the stars become.
       star.sprite.rotation = Math.atan2(dyCenter, dxCenter) + Math.PI / 2;
     }
   });
