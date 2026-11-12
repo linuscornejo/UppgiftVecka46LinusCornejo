@@ -52,9 +52,17 @@
   }
 
   // Change flight speed every 5 seconds
-  setInterval(() => {
-    warpSpeed = warpSpeed > 0 ? 0 : 1;
-  }, 5000);
+    // Håll inne musknappen för warp-fart
+  window.addEventListener('pointerdown', () => { warpSpeed = 1; });
+  window.addEventListener('pointerup', () => { warpSpeed = 0; });
+
+  // Håll inne mellanslag för warp-fart
+  window.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') { e.preventDefault(); warpSpeed = 1; }
+  });
+  window.addEventListener('keyup', (e) => {
+    if (e.code === 'Space') { warpSpeed = 0; }
+  });
 
   // Listen for animate update
   app.ticker.add((time) => {
