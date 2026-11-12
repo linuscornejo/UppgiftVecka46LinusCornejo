@@ -51,7 +51,6 @@
     star.y = Math.sin(deg) * distance;
   }
 
-  // Change flight speed every 5 seconds
     // Håll inne musknappen för warp-fart
   window.addEventListener('pointerdown', () => { warpSpeed = 1; });
   window.addEventListener('pointerup', () => { warpSpeed = 0; });
