@@ -1,8 +1,6 @@
-import { Application, Assets, Sprite } from 'pixi.js';
-
 (async () => {
   // Create a new application
-  const app = new Application();
+  const app = new PIXI.Application();
 
   // Initialize the application
   await app.init({ resizeTo: window });
@@ -11,7 +9,7 @@ import { Application, Assets, Sprite } from 'pixi.js';
   document.body.appendChild(app.canvas);
 
   // Load the star texture
-  const starTexture = await Assets.load('https://pixijs.com/assets/star.png');
+  const starTexture = await PIXI.Assets.load('https://pixijs.com/assets/star.png');
 
   const starAmount = 1000;
   let cameraZ = 0;
@@ -27,7 +25,7 @@ import { Application, Assets, Sprite } from 'pixi.js';
 
   for (let i = 0; i < starAmount; i++) {
     const star = {
-      sprite: new Sprite(starTexture),
+      sprite: new PIXI.Sprite(starTexture),
       z: 0,
       x: 0,
       y: 0,
@@ -53,10 +51,17 @@ import { Application, Assets, Sprite } from 'pixi.js';
     star.y = Math.sin(deg) * distance;
   }
 
-  // Change flight speed every 5 seconds
-  setInterval(() => {
-    warpSpeed = warpSpeed > 0 ? 0 : 1;
-  }, 5000);
+  // Hold the mouse button down for warp speed
+  window.addEventListener('pointerdown', () => { warpSpeed = 1; });
+  window.addEventListener('pointerup', () => { warpSpeed = 0; });
+
+  // Hold the space bar down for warp speed
+  window.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') { e.preventDefault(); warpSpeed = 1; }
+  });
+  window.addEventListener('keyup', (e) => {
+    if (e.code === 'Space') { warpSpeed = 0; }
+  });
 
   // Listen for animate update
   app.ticker.add((time) => {
