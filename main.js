@@ -18,7 +18,7 @@
   let cameraZ = 0;
   const fov = 25;
   const baseSpeed = 0.020;
-  let speed = 1;
+  let speed = 0;
   let warpSpeed = 0;
   const starStretch = 8;
   const starBaseSize = 0.1;
