@@ -21,7 +21,7 @@
   let speed = 1;
   let warpSpeed = 0;
   const starStretch = 8;
-  const starBaseSize = 0.05;
+  const starBaseSize = 0.1;
 
   // Saves the stars.
   const stars = [];
